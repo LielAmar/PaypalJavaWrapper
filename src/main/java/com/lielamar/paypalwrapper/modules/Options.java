@@ -8,6 +8,10 @@ public class Options {
     private double handlingPercentage;
     private double shippingDiscountPercentage;
 
+    /*
+     * An options object with basic data for requests, such as currencyCode, percentage for other services etc.
+     */
+
     public Options() {
         this("USD", 0.0, 0.0, 0.0);
     }
@@ -27,6 +31,7 @@ public class Options {
     public void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
     }
+
 
     public double getShippingPercentage() {
         return shippingPercentage;

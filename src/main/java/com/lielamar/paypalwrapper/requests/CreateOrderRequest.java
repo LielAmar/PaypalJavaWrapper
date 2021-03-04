@@ -29,10 +29,18 @@ public class CreateOrderRequest extends Request {
     private String city, state;
     private String zipCode, countryCode;
 
+    /*
+     * Creates an order with multiple products for the buyer with the given contact information
+     */
+
     public CreateOrderRequest(String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode) {
+        this(new HashSet<>(), firstName, surName, addressLineOne, addressLineTwo, city, state, zipCode, countryCode);
+    }
+
+    public CreateOrderRequest(Set<Product> products, String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode) {
         super("https://api-m.sandbox.paypal.com/v2/checkout/orders");
 
-        this.products = new HashSet<>();
+        this.products = products;
 
         this.firstName = firstName;
         this.surName = surName;
@@ -45,6 +53,7 @@ public class CreateOrderRequest extends Request {
         this.countryCode = countryCode;
     }
 
+
     public void addProduct(Product product) {
         this.products.add(product);
     }
@@ -52,6 +61,7 @@ public class CreateOrderRequest extends Request {
     public void removeProduct(Product product) {
         this.products.remove(product);
     }
+
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -68,6 +78,7 @@ public class CreateOrderRequest extends Request {
     public String getSurName() {
         return this.surName;
     }
+
 
     public String getAddressLineOne() {
         return addressLineOne;
@@ -117,6 +128,15 @@ public class CreateOrderRequest extends Request {
         this.countryCode = countryCode;
     }
 
+
+    /**
+     * Executes the CreateOrderRequest.
+     * This forms a JSONObject object with all the required data for Paypal to generate a Transaction.
+     *
+     * @param accessToken   Access token to use to call Paypal's API
+     * @param options       Options object to retrieve basic data from
+     * @return              Paypal's response to the request
+     */
     public JSONObject execute(String accessToken, Options options) {
         if(products.size() == 0)
             return new JSONObject("{}");

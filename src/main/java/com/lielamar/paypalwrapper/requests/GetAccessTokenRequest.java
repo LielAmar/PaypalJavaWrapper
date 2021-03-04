@@ -19,12 +19,17 @@ public class GetAccessTokenRequest extends Request {
     private String clientId;
     private String secret;
 
+    /*
+     * Retrieves the User's Access Token by Client ID & Secret
+     */
+
     public GetAccessTokenRequest(String clientId, String secret) {
         super("https://api-m.sandbox.paypal.com/v1/oauth2/token");
 
         this.clientId = clientId;
         this.secret = secret;
     }
+
 
     public String getClientId() {
         return clientId;
@@ -42,6 +47,15 @@ public class GetAccessTokenRequest extends Request {
         this.secret = secret;
     }
 
+
+    /**
+     * Executes the GetAccessTokenRequest.
+     * This forms a JSONObject object with all the required data for Paypal to retrieve an Access Token.
+     *
+     * @param accessToken   Access token to use to call Paypal's API
+     * @param options       Options object to retrieve basic data from
+     * @return              Paypal's response to the request
+     */
     public JSONObject execute(String accessToken, Options options) {
         try {
             HttpClient client = HttpClientBuilder.create().build();

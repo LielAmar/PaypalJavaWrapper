@@ -3,7 +3,7 @@ package com.lielamar.paypalwrapper.modules;
 public class Product {
 
     private String category;
-    private String packageId;
+    private String productId;
 
     private String title;
     private String description;
@@ -13,9 +13,13 @@ public class Product {
 
     private int quantity;
 
-    public Product(String category, String packageId, String title, String description, String price, int taxPercentage, int quantity) {
+    /*
+     * Product object to assemble a complete product
+     */
+
+    public Product(String category, String productId, String title, String description, String price, int taxPercentage, int quantity) {
         this.category = category;
-        this.packageId = packageId;
+        this.productId = productId;
 
         this.title = title;
         this.description = description;
@@ -35,12 +39,12 @@ public class Product {
         this.category = category;
     }
 
-    public String getPackageId() {
-        return packageId;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setPackageId(String packageId) {
-        this.packageId = packageId;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
 
