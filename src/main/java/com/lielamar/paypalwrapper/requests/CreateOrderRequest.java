@@ -1,5 +1,6 @@
 package com.lielamar.paypalwrapper.requests;
 
+import com.lielamar.paypalwrapper.modules.Environment;
 import com.lielamar.paypalwrapper.modules.Options;
 import com.lielamar.paypalwrapper.modules.Product;
 import com.lielamar.paypalwrapper.utils.Constants;
@@ -10,6 +11,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,8 +41,6 @@ public class CreateOrderRequest extends Request {
     }
 
     public CreateOrderRequest(Set<Product> products, String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode) {
-        super("https://api-m.sandbox.paypal.com/v2/checkout/orders");
-
         this.products = products;
 
         this.firstName = firstName;
@@ -133,18 +134,19 @@ public class CreateOrderRequest extends Request {
      * Executes the CreateOrderRequest.
      * This forms a JSONObject object with all the required data for Paypal to generate a Transaction.
      *
-     * @param accessToken   Access token to use to call Paypal's API
      * @param options       Options object to retrieve basic data from
+     * @param accessToken   Access token to use to call Paypal's API
      * @return              Paypal's response to the request
      */
-    public JSONObject execute(String accessToken, Options options) {
+    @Nullable
+    public JSONObject execute(@NotNull Options options, @NotNull String accessToken) {
         if(products.size() == 0)
             return new JSONObject("{}");
 
         try {
             HttpClient client = HttpClientBuilder.create().build();
 
-            HttpPost postRequest = new HttpPost(this.apiLink);
+            HttpPost postRequest = new HttpPost(options.getEnvironment().getCreateOrderUrl());
 
             // Header
             postRequest.addHeader("Content-Type", "application/json");
@@ -236,8 +238,6 @@ public class CreateOrderRequest extends Request {
             );
 
             body.put("purchase_units", new JSONArray().put(purchaseUnitsJson));
-
-            System.out.println(body.toString());
 
             StringEntity entity = new StringEntity(body.toString());
             postRequest.setEntity(entity);

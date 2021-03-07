@@ -2,6 +2,7 @@ package com.lielamar.paypalwrapper.modules;
 
 public class Options {
 
+    private Environment environment;
     private String currencyCode;
 
     private double shippingPercentage;
@@ -12,17 +13,27 @@ public class Options {
      * An options object with basic data for requests, such as currencyCode, percentage for other services etc.
      */
 
-    public Options() {
-        this("USD", 0.0, 0.0, 0.0);
+    public Options(Environment environment) {
+        this(environment, "USD", 0.0, 0.0, 0.0);
     }
 
-    public Options(String currencyCode, double shippingPercentage, double handlingPercentage, double shippingDiscountPercentage) {
+    public Options(Environment environment, String currencyCode, double shippingPercentage, double handlingPercentage, double shippingDiscountPercentage) {
+        this.environment = environment;
         this.currencyCode = currencyCode;
+
         this.shippingPercentage = shippingPercentage;
         this.handlingPercentage = handlingPercentage;
         this.shippingDiscountPercentage = shippingDiscountPercentage;
     }
 
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
     public String getCurrencyCode() {
         return currencyCode;
