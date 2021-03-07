@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class ConfirmOrderRequest {
+public class ConfirmOrderRequest extends Request {
 
     private String transactionId;
 

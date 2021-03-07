@@ -25,6 +25,9 @@ public class CreateOrderRequest extends Request {
 
     private final Set<Product> products;
 
+    private String brandName;
+    private String returnUrl, cancelUrl;
+
     private String firstName;
     private String surName;
 
@@ -36,12 +39,16 @@ public class CreateOrderRequest extends Request {
      * Creates an order with multiple products for the buyer with the given contact information
      */
 
-    public CreateOrderRequest(String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode) {
-        this(new HashSet<>(), firstName, surName, addressLineOne, addressLineTwo, city, state, zipCode, countryCode);
+    public CreateOrderRequest(String brandName, String returnUrl, String cancelUrl, String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode) {
+        this(brandName, returnUrl, cancelUrl, new HashSet<>(), firstName, surName, addressLineOne, addressLineTwo, city, state, zipCode, countryCode);
     }
 
-    public CreateOrderRequest(Set<Product> products, String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode) {
+    public CreateOrderRequest(String brandName, String returnUrl, String cancelUrl, Set<Product> products, String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode) {
         this.products = products;
+
+        this.brandName = brandName;
+        this.returnUrl = returnUrl;
+        this.cancelUrl = cancelUrl;
 
         this.firstName = firstName;
         this.surName = surName;
@@ -61,6 +68,31 @@ public class CreateOrderRequest extends Request {
 
     public void removeProduct(Product product) {
         this.products.remove(product);
+    }
+
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getReturnUrl() {
+        return returnUrl;
+    }
+
+    public void setReturnUrl(String returnUrl) {
+        this.returnUrl = returnUrl;
+    }
+
+    public String getCancelUrl() {
+        return cancelUrl;
+    }
+
+    public void setCancelUrl(String cancelUrl) {
+        this.cancelUrl = cancelUrl;
     }
 
 
@@ -156,8 +188,8 @@ public class CreateOrderRequest extends Request {
             JSONObject body = new JSONObject();
             body.put("intent", "CAPTURE");
             body.put("application_context", new JSONObject()
-                    .put("return_url", "https://google.com")
-                    .put("cancel_url", "https://youtube.com")
+                    .put("return_url", this.returnUrl)
+                    .put("cancel_url", this.cancelUrl)
                     .put("brand_name", "ReWrite Media INC")
                     .put("user_action", "CONTINUE")
             );

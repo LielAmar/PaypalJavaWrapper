@@ -9,8 +9,8 @@ import org.json.JSONObject;
 
 public class PaypalWrapper {
 
-    private final String accessToken;      // Paypal's Access Token
-    private final Options options;         // An options object
+    private final String accessToken; // Paypal's Access Token
+    private final Options options;    // An options object
 
 
     private PaypalWrapper(String accessToken, Options options) {
