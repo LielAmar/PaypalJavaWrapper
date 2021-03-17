@@ -70,6 +70,8 @@ public class CreateOrderRequest extends Request {
         this.products.remove(product);
     }
 
+    public Set<Product> getProducts() { return this.products; }
+
 
     public String getBrandName() {
         return brandName;
