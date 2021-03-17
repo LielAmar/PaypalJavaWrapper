@@ -203,7 +203,7 @@ public class CreateOrderRequest extends Request {
             purchaseUnitsJson.put("description", this.firstName + " " + this.surName + "'s Cart");
             purchaseUnitsJson.put("soft_descriptor", this.firstName + " " + this.surName + "'s Cart");
 
-            double totalPrice       = this.products.stream().mapToDouble(product -> Double.parseDouble(product.getPrice())).sum();
+            double totalPrice       = this.products.stream().mapToDouble(product -> (Double.parseDouble(product.getPrice()))*product.getQuantity()).sum();
             double shippingPrice    = totalPrice * options.getShippingPercentage();
             double handlingPrice    = totalPrice * options.getHandlingPercentage();
             double taxPrice         = this.products.stream().mapToDouble(product -> (Double.parseDouble(product.getPrice()) * product.getTaxPercentage())).sum();
