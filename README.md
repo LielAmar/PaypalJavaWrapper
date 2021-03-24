@@ -23,10 +23,13 @@ Then, to call a Request, you can use the following code.
 try {
   PaypalWrapper paypalWrapper = PaypalWrapper.buildWrapper(Environment.SANDBOX, "Client ID", "Secret");
                 
-  CreateOrderRequest request = new CreateOrderRequest("First", "Last", "Address 1", "Address 2", "City", "State", "Zip Code", "Country Code");
-  request.addProduct(new Product("Category", "ProductId", "Product Name", "Product Description", "Product Price", (Double) <Product Tax Percentage>, (int) Quantity));
+            CreateOrderRequest createOrderRequest = new CreateOrderRequest("Brand Name", "Return URL", "Cancel URL", "First", "Last", "Address 1", "Address 2", "City", "State", "Zip Code", "Country Code");
+            createOrderRequest.addProduct(new Product("Category", "ProductId", "Product Name", "Product Description", "Product Price", (Double) <Product Tax Percentage>, (int) Quantity));
+            JSONObject createOrderResponse = paypalWrapper.executeRequest(createOrderRequest);
 
-  JSONObject response = paypalWrapper.executeRequest(request);
+            String transactionId = createOrderResponse.getString("id");
+            ConfirmOrderRequest confirmOrderRequest = new ConfirmOrderRequest(transactionId);
+            JSONObject confirmOrderResponse = paypalWrapper.executeRequest(confirmOrderRequest);
 } catch (RequestExecutionException executionException) {
   executionException.printStackTrace();
 }
