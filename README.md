@@ -3,16 +3,16 @@
 ## Information
 This wrapper is a Java Wrapper for Paypal's API.
 It is a weak alternative for [Paypal's Java Checkout SDK](https://github.com/paypal/Checkout-Java-SDK).
-This library requires the following dependencies:
+This library is using the following dependencies:
 * org.json:json
 * org.apache.httpcomponents:httpclient
 
 ## Features
 * Generate a Access Token through a Client ID and Secret
 * Create an Order with multiple items
+* Confirm a purchase
 
 ## TODO-List
-* Add an option to confirm a purchase
 * Possibly make it async
 
 ## Using Liel's Paypal Java Wrapper
