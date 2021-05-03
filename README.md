@@ -3,16 +3,16 @@
 ## Information
 This wrapper is a Java Wrapper for Paypal's API.
 It is a weak alternative for [Paypal's Java Checkout SDK](https://github.com/paypal/Checkout-Java-SDK).
-This library requires the following dependencies:
+This library is using the following dependencies:
 * org.json:json
 * org.apache.httpcomponents:httpclient
 
 ## Features
 * Generate a Access Token through a Client ID and Secret
 * Create an Order with multiple items
+* Confirm a purchase
 
 ## TODO-List
-* Add an option to confirm a purchase
 * Possibly make it async
 
 ## Using Liel's Paypal Java Wrapper
@@ -23,10 +23,13 @@ Then, to call a Request, you can use the following code.
 try {
   PaypalWrapper paypalWrapper = PaypalWrapper.buildWrapper(Environment.SANDBOX, "Client ID", "Secret");
                 
-  CreateOrderRequest request = new CreateOrderRequest("First", "Last", "Address 1", "Address 2", "City", "State", "Zip Code", "Country Code");
-  request.addProduct(new Product("Category", "ProductId", "Product Name", "Product Description", "Product Price", (Double) <Product Tax Percentage>, (int) Quantity));
+  CreateOrderRequest createOrderRequest = new CreateOrderRequest("Brand Name", "Return URL", "Cancel URL", "First", "Last", "Address 1", "Address 2", "City", "State", "Zip Code", "Country Code");
+  createOrderRequest.addProduct(new Product("Category", "ProductId", "Product Name", "Product Description", "Product Price", (Double) <Product Tax Percentage>, (int) Quantity));
+  JSONObject createOrderResponse = paypalWrapper.executeRequest(createOrderRequest);
 
-  JSONObject response = paypalWrapper.executeRequest(request);
+  String transactionId = createOrderResponse.getString("id");
+  ConfirmOrderRequest confirmOrderRequest = new ConfirmOrderRequest(transactionId);
+  JSONObject confirmOrderResponse = paypalWrapper.executeRequest(confirmOrderRequest);
 } catch (RequestExecutionException executionException) {
   executionException.printStackTrace();
 }
