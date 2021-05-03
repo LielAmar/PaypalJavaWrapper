@@ -35,15 +35,20 @@ public class CreateOrderRequest extends Request {
     private String city, state;
     private String zipCode, countryCode;
 
+    private int discount;
+
     /*
      * Creates an order with multiple products for the buyer with the given contact information
      */
-
     public CreateOrderRequest(String brandName, String returnUrl, String cancelUrl, String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode) {
-        this(brandName, returnUrl, cancelUrl, new HashSet<>(), firstName, surName, addressLineOne, addressLineTwo, city, state, zipCode, countryCode);
+        this(brandName, returnUrl, cancelUrl, new HashSet<>(), firstName, surName, addressLineOne, addressLineTwo, city, state, zipCode, countryCode, 0);
     }
 
-    public CreateOrderRequest(String brandName, String returnUrl, String cancelUrl, Set<Product> products, String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode) {
+    public CreateOrderRequest(String brandName, String returnUrl, String cancelUrl, String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode, int discount) {
+        this(brandName, returnUrl, cancelUrl, new HashSet<>(), firstName, surName, addressLineOne, addressLineTwo, city, state, zipCode, countryCode, discount);
+    }
+
+    public CreateOrderRequest(String brandName, String returnUrl, String cancelUrl, Set<Product> products, String firstName, String surName, String addressLineOne, String addressLineTwo, String city, String state, String zipCode, String countryCode, int discount) {
         this.products = products;
 
         this.brandName = brandName;
@@ -59,6 +64,8 @@ public class CreateOrderRequest extends Request {
         this.state = state;
         this.zipCode = zipCode;
         this.countryCode = countryCode;
+
+        this.discount = discount;
     }
 
 
@@ -163,6 +170,14 @@ public class CreateOrderRequest extends Request {
         this.countryCode = countryCode;
     }
 
+    public int getDiscount() {
+        return this.discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
 
     /**
      * Executes the CreateOrderRequest.
@@ -209,13 +224,20 @@ public class CreateOrderRequest extends Request {
             double taxPrice         = this.products.stream().mapToDouble(product -> (Double.parseDouble(product.getPrice()) * product.getTaxPercentage())).sum();
             double shippingDiscount = totalPrice * options.getShippingDiscountPercentage();
 
+            System.out.println("1. " + (totalPrice - (totalPrice * this.discount/100) + ""));
+            System.out.println("2. " + ((totalPrice * this.discount/100) + ""));
+
             purchaseUnitsJson.put("amount", new JSONObject()
                     .put("currency_code", options.getCurrencyCode())
-                    .put("value", totalPrice)
+                    .put("value", totalPrice - (totalPrice * this.discount/100) + "")
                     .put("breakdown", new JSONObject()
                             .put("item_total", new JSONObject()
                                     .put("currency_code", options.getCurrencyCode())
-                                    .put("value", totalPrice + "")
+                                    .put("value", totalPrice)
+                            )
+                            .put("discount", new JSONObject()
+                                .put("currency_code", options.getCurrencyCode())
+                                .put("value", (totalPrice * this.discount/100) + "")
                             )
                             .put("shipping", new JSONObject()
                                     .put("currency_code", options.getCurrencyCode())
@@ -238,12 +260,14 @@ public class CreateOrderRequest extends Request {
 
             JSONArray items = new JSONArray();
             products.forEach((product) -> {
+                System.out.println("3. " + (Double.parseDouble(product.getPrice()) - (Double.parseDouble(product.getPrice()) * this.discount/100) + ""));
+
                 items.put(new JSONObject()
                         .put("name", product.getTitle())
                         .put("description", product.getDescription())
                         .put("unit_amount", new JSONObject()
                                 .put("currency_code", options.getCurrencyCode())
-                                .put("value", product.getPrice() + "")
+                                .put("value", product.getPrice())
                         )
                         .put("tax", new JSONObject()
                                 .put("currency_code", options.getCurrencyCode())
@@ -275,6 +299,8 @@ public class CreateOrderRequest extends Request {
 
             StringEntity entity = new StringEntity(body.toString());
             postRequest.setEntity(entity);
+
+            System.out.println(body);
 
             // Execution
             HttpResponse response = client.execute(postRequest);
