@@ -1,5 +1,7 @@
 # Paypal Java Wrapper
 
+[![Discord](https://img.shields.io/discord/416652224505184276?color=%235865F2&label=Join%20My%20Discord)](https://discord.gg/NzgBrqR)
+
 ## Information
 This wrapper is a Java Wrapper for Paypal's API.
 It is a weak alternative for [Paypal's Java Checkout SDK](https://github.com/paypal/Checkout-Java-SDK).
